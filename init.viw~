@@ -1,0 +1,109 @@
+"instalacion de plugins"
+call plug#begin('~/.vim/plugged')
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+Plug 'glepnir/oceanic-material'
+
+Plug 'tmsvg/pear-tree'
+
+Plug 'bling/vim-bufferline'
+
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+"instala nerdtree, una especie de explorador de archivos para vim"
+Plug 'morhetz/gruvbox' 
+"instala el tema gruvbox"
+
+Plug 'junegunn/rainbow_parentheses.vim'
+
+Plug 'preservim/nerdcommenter'
+
+Plug 'christoomey/vim-tmux-navigator'
+
+Plug 'vim-airline/vim-airline'
+
+Plug 'vim-airline/vim-airline-themes'
+
+Plug 'sbdchd/neoformat'
+
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'yarn install',
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
+
+call plug#end()
+
+
+set number
+"habilita la numeracion de numeros"
+set mouse=a
+"permite que se pueda usar el mouse"
+set clipboard=unnamed
+set numberwidth=1
+set relativenumber
+"los numeros dependen de la linea en la que te encuentres"
+set cursorline
+set encoding=utf-8
+set modifiable
+
+
+set title  " Muestra el nombre del archivo en la ventana de la terminal
+colorscheme oceanic_material 
+set background=dark
+set cursorline  " Resalta la línea actual
+set colorcolumn=220  " Muestra la columna límite a 120 caracteres
+
+" Indentación a 2 espacios
+set tabstop=4
+set shiftwidth=2
+set softtabstop=2
+set shiftround
+set expandtab  " Insertar espacios en lugar de <Tab>s
+
+set hidden  " Permitir cambiar de buffers sin tener que guardarlos
+set ignorecase  " Ignorar mayúsculas al hacer una búsqueda
+set smartcase  " No ignorar mayúsculas si la palabra a buscar contiene mayúsculas
+
+set spelllang=en,es  " Corregir palabras usando diccionarios en inglés y español
+set ruler
+set syntax=on 
+set termguicolors  " Activa true colors en la terminal
+
+let NERDTreeQuitOpen=1  "al abrir un archivo con nerdtree, este se cierra"
+let mapleader='-'
+let g:gruvbox_constrast_dark = "hard"
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='simple'"
+let g:rainbow_active = 1
+filetype plugin on
+
+"inputs"
+function Range()
+  call inputsave()
+  let g:rango = input('rango de la linea')
+  call inputrestore()  
+:endfunction
+
+"remapeos"
+nmap <Leader>w :w<CR>
+nmap <Leader>q :q<CR>
+nmap <Leader>nt :NERDTreeToggle<CR>   
+nmap <Leader>b :buffers<CR>
+nmap <Tab> :bn<CR>
+nmap <Leader>tp :vsp<CR>:term python % <CR>
+nmap <Leader>t :vsp <CR> :term % <CR>
+nmap <F3> :q!<CR>
+nmap <F2> :wq!<CR>
+nmap <Leader>v :vsp <CR>
+nmap <Leader>d :bd<CR>
+nmap <Leader>- :bp<CR>
+nmap <Leader>c :cd ~<CR>
+nmap <Leader>f :FZF<CR>
+nmap <Leader>I :edit ~\AppData\Local\nvim\init.vim<CR>
+
+"comandos que se ejecutan automaticamente"
+:autocmd vimenter * silent! :RainbowParentheses
+:autocmd bufenter * silent! :cd %:p:h
+
+
+

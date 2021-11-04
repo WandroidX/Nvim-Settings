@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =4
+let g:netrw_dirhist_4='C:/Users'
+let g:netrw_dirhist_3='C:/Users/Wandroid'
+let g:netrw_dirhist_2='C:/Users/Wandroid/Downloads'
+let g:netrw_dirhist_1='C:/Users/Wandroid/Downloads/Proyectos creativos/Python/VIM course'
+let g:netrw_dirhist_0='C:/Users/Wandroid/Downloads/Proyectos creativos/Python'
+let g:netrw_dirhist_9='C:/Users/Wandroid/Downloads/Proyectos creativos'
+let g:netrw_dirhist_8='C:/Users/Wandroid/Downloads/Proyectos creativos/Python'
+let g:netrw_dirhist_7='C:/Users/Wandroid/Downloads/Proyectos creativos'
+let g:netrw_dirhist_6='C:\Users\Wandroid\Downloads'
+let g:netrw_dirhist_5='C:/Users/Wandroid/Downloads'
