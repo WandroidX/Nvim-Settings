@@ -21,7 +21,8 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 "pone colores a las parejas de parentesis para verlos mas facilmente"
 Plug 'junegunn/rainbow_parentheses.vim' 
 "buscador difuso
-Plug 'junegunn/fzf'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 "tema de color de vim"
 Plug 'Rigellute/rigel'
 "me permite comentar presionando leader+cc"
@@ -57,11 +58,13 @@ set hidden  " Permitir cambiar de buffers sin tener que guardarlos
 set ignorecase  " Ignorar mayúsculas al hacer una búsqueda
 set smartcase  " No ignorar mayúsculas si la palabra a buscar contiene mayúsculas
 
+let $PATH = "C:\\Program Files\\Git\\usr\\bin;" . $PATH
 set spelllang=en,es  " Corregir palabras usando diccionarios en inglés y español
 set ruler
 set syntax=on 
 set termguicolors  " Activa true colors en la terminal
 set guifont=DroidSansMono_Nerd_Font:h11
+set complete+=k~/desktop/html.txt
 
 let NERDTreeQuitOpen=1  "al abrir un archivo con nerdtree, este se cierra"
 let mapleader='-'
@@ -76,16 +79,17 @@ filetype plugin on
 
 "FUNCIONES
 
+"this function allows me with leader+c commit to git the added previously
 function Commit()
 
   call inputsave()
-  let cometer = input('Desea guardar los cambios en git? Y/y/N/n: ')
+  let cometer = input('Desea guardar los cambios en git? Y/y/N/n: ')<Cr>
   let mensaje= input('Mensaje: ')
   call inputrestore()  
 
   if cometer=="Y" || cometer=="y" 
     
-    :Git commit <c-r>=mensaje <cr> <cr>
+    :execute 'Git commit -m '. mensaje
 
   else
     echo "Operación cancelada"
@@ -94,6 +98,7 @@ function Commit()
 
 endfunction
 
+"this function allows me initialize a repository 
 function Initialize()
 
   call inputsave()
@@ -113,19 +118,27 @@ function Initialize()
 
 endfunction
 
+"this function allow me 
 function Pushear()
 
   call inputsave()
-  let push = input('desea guardar el proyecto en git? Y/y/N/n: ')
+  let l:push = input('desea guardar el proyecto en git? Y/y/N/n: ')
   call inputrestore()  
 
   if push=="Y" || push=="y" 
 
     call inputsave()
-    let l:branch = input('En que rama desea guardarlo?')
+    let l:link= input('Enlace del repositorio: ')
+    let l:branch = input('En que rama desea guardarlo? ')
     call inputrestore()  
+    
+    if link=='' || branch==''
+      <esc>
 
-    :Git push <C-R>=branch <CR> <CR>
+    else
+      :execute 'Git push '. branch 
+    
+    endif
 
   else
     
@@ -150,7 +163,7 @@ endfunction
 
 "mapeos de nerdtree
 nmap <Leader>n :NERDTreeToggle<CR>   
-nmap <Leader>m :NERDTreeToggle<cr>:NERDTreeCWD<CR>
+nmap <Leader>m :NERDTreeToggle<cr> :NERDTreeCWD<CR>
 
 "remapeos"
 nmap <Leader>s :so %
@@ -167,7 +180,6 @@ nmap <Leader>d :bd<CR>
 nmap <Leader>- :bp<CR>
 nmap <Leader>c :cd ~<CR>
 nmap <F5> :edit ~\AppData\Local\nvim\init.vim<CR>
-nmap <Leader>a :let hello='hola'<CR> :echo <c-r>=hello <CR>
 
 "mapeos de vimplug
 nmap <Leader>pi :PlugInstall<CR>
@@ -187,5 +199,4 @@ nmap <Leader>f :FZF<cr>
 "comandos que se ejecutan automaticamente"
 :autocmd vimenter * silent! :RainbowParentheses
 :autocmd bufenter * silent! :cd %:p:h
-
-
+":autocmd bufenter *html silent! :abbrev ht
