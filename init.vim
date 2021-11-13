@@ -2,6 +2,16 @@
 "instalacion de plugins"
 call plug#begin('~/.vim/plugged')
 
+
+"snippets para vim
+Plug 'SirVer/ultisnips'
+"motor de snippets
+Plug 'honza/vim-snippets'
+"para ayudarme a salir de modo insertar mas rapido 
+Plug 'zhou13/vim-easyescape'
+"instalar ctags, generador de etiquetas. i will use it to goto fuctions
+"definitiion
+Plug 'webastien/vim-ctags'
 "autocompletado de distintos lenguajes para vim"
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "integrar git a vim"
@@ -11,6 +21,7 @@ Plug 'yggdroot/indentline'
 "resaltado de sintaxis"
 Plug 'sheerun/vim-polyglot'
 
+"pone parentesis automaticamente
 Plug 'jiangmiao/auto-pairs'
 
 Plug 'glepnir/oceanic-material'
@@ -58,21 +69,36 @@ set hidden  " Permitir cambiar de buffers sin tener que guardarlos
 set ignorecase  " Ignorar mayúsculas al hacer una búsqueda
 set smartcase  " No ignorar mayúsculas si la palabra a buscar contiene mayúsculas
 
+
 let $PATH = "C:\\Program Files\\Git\\usr\\bin;" . $PATH
 set spelllang=en,es  " Corregir palabras usando diccionarios en inglés y español
 set ruler
-set syntax=on 
+set syntax=on " pone color a la sintaxis
 set termguicolors  " Activa true colors en la terminal
 set guifont=DroidSansMono_Nerd_Font:h11
-set complete+=k~/desktop/html.txt
+set complete+=k~/desktop/html.txt "aqui puedo poner un archivo para autocompletar
 
 let NERDTreeQuitOpen=1  "al abrir un archivo con nerdtree, este se cierra"
-let mapleader='-'
+
 let g:gruvbox_constrast_dark = "hard"
+
+"airline configuration
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts=1
-let g:airline_theme='simple'"
-let g:rainbow_active = 1
+let g:airline_powerline_fonts=1 "permite usar fuente parcheada para dar estilo a airline como powerline
+let g:airline_theme='simple' "tema de airline
+let g:rainbow_active = 1 "activa los parentesis de colores
+
+"fzf settings
+let g:fzf_preview_window = ['right:50%'] "configura la preview de fzf
+let g:fzf_layout = { 'down': '~70%' } "permite configurar lo que ocupa fzf en pantalla
+
+"easyescape settings
+let g:easyescape_chars = { "j": 2 } "caracteres que sustituyen a escape
+let g:easyescape_timeout = 50 "tiempo de espera de los caracteres
+
+
+let g:python3_host_prog='c:\\Python310\\python.exe' "aqui se debe poner la ruta del ejecutable de python3
+
 
 
 filetype plugin on
@@ -81,105 +107,96 @@ filetype plugin on
 
 "this function allows me with leader+c commit to git the added previously
 function Commit()
-
   call inputsave()
-  let cometer = input('Desea guardar los cambios en git? Y/y/N/n: ')<Cr>
+  let cometer = input('Desea guardar los cambios en git? Y/y/N/n: ')
   let mensaje= input('Mensaje: ')
   call inputrestore()  
-
   if cometer=="Y" || cometer=="y" 
-    
-    :execute 'Git commit -m '. mensaje
-
+    :execute 'Git commit -m '.'"'. mensaje.'"'
   else
     echo "Operación cancelada"
-
   endif
-
 endfunction
+
+
+
 
 "this function allows me initialize a repository 
 function Initialize()
-
   call inputsave()
   let init = input('desea inicializar un proyecto en git? Y/y/N/n: ')
   call inputrestore()  
-
   if init=="Y" || init=="y" 
-
     :Git init
     echo "Inicializado"
-
   else
-    
     echo "Operación cancelada"
-
   endif
-
 endfunction
 
 "this function allow me 
 function Pushear()
-
   call inputsave()
   let l:push = input('desea guardar el proyecto en git? Y/y/N/n: ')
   call inputrestore()  
-
   if push=="Y" || push=="y" 
-
     call inputsave()
-    let l:link= input('Enlace del repositorio: ')
     let l:branch = input('En que rama desea guardarlo? ')
     call inputrestore()  
-    
-    if link=='' || branch==''
-      <esc>
-
-    else
-      :execute 'Git push '. branch 
-    
-    endif
-
+    :execute 'Git push -u origin '. branch 
   else
-    
     echo "Operación cancelada"
-
   endif
-
-
 endfunction
 
+function Remote()
+  call inputsave()
+  let l:link=input('Enlace del repositorio: ')
+  call inputrestore()
+  if link=''
+    echo 'No debe estar vacio'
+  :execute 'Git remote add origin '.link
+endfunction
 function Add()
-  
   call inputsave()
   let add=input('File name / Folder name / % for current file/: ')
   call inputrestore()
-
   :execute 'Git add '. add
-
-
 endfunction
 
-
+"jj ahora es escape en modo insertar
+imap jj <esc>
+"espacio no hace nada en modo normal
+nnoremap <space> <Nop> 
+"<leader> es espacio
+let mapleader=' '
 "mapeos de nerdtree
 nmap <Leader>n :NERDTreeToggle<CR>   
 nmap <Leader>m :NERDTreeToggle<cr> :NERDTreeCWD<CR>
 
+
+" Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
+" - https://github.com/Valloric/YouCompleteMe
+" - https://github.com/nvim-lua/completion-nvim
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+
 "remapeos"
-nmap <Leader>s :so %
+nmap <Leader>s :so %<CR>
 nmap <Leader>w :w<CR>
-nmap <Leader>q :q<CR>
-nmap <Leader>b :buffers<CR>
-nmap <F6> :term python % <CR>
-nmap <Tab> :bn<CR>
-nmap <Leader>t :term % <CR>
-nmap <F3> :q!<CR>
-nmap <F2> :wq!<CR>
+nmap <Leader>q :q!<CR>
 nmap <Leader>v :vsp <CR>
 nmap <Leader>d :bd<CR>
-nmap <Leader>- :bp<CR>
+nmap <Leader><Tab> :bp<CR>
 nmap <Leader>c :cd ~<CR>
+nmap <Leader>t :term % <CR>
+nmap <F3> :q!<CR>
+nmap <F6> :term python % <CR>
+nmap <F2> :wq!<CR>
 nmap <F5> :edit ~\AppData\Local\nvim\init.vim<CR>
+nmap <Tab> :bn<CR>
 
 "mapeos de vimplug
 nmap <Leader>pi :PlugInstall<CR>
@@ -191,12 +208,33 @@ nmap <Leader>gc :call Commit()<CR>
 nmap <Leader>ga :call Add()<CR>
 nmap <Leader>gl :Git log<CR>
 nmap <Leader>gs :Git status<CR>
+nmap <Leader>gr :call Remote()<CR>
 nmap <Leader>gi :call Initialize()<CR>
 
 "mapeos de fzf
-nmap <Leader>f :FZF<cr>
+nmap <Leader>f :Files<cr>
+nmap <Leader>l :Lines<CR>
+nmap <Leader>b :Buffers<CR>
+nmap <Leader>T :Tags<CR>
+
+"etiquetas
+nmap <Leader>t :execute 'tag ' . expand('<cword>') . expand('')
+set autochdir "cambia automaticamente el directorio de trabajo al directorio del buffer actual"
+
+
+
+
+
+
 
 "comandos que se ejecutan automaticamente"
 :autocmd vimenter * silent! :RainbowParentheses
-:autocmd bufenter * silent! :cd %:p:h
-":autocmd bufenter *html silent! :abbrev ht
+:autocmd vimenter *.html,.py,.bat,.css,.js,.ps1 silent! :cd %:p:h | :!ctags -R .
+:autocmd bufwrite * :!ctags -R %
+
+let g:tagbar_ctags_bin = 'C:\ProgramData\chocolatey\bin\ctags.exe' "aqui va la ruta de ctags, y debe ser agregada a PATH
+
+
+
+
+
