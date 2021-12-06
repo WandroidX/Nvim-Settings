@@ -1,4 +1,5 @@
-"prueba de fugitive
+"NOTA: Ctags debe ser agregado a PATH y la ruta de python3 o 2 en una variable llamada g:python3_host_prog. Para los plugins se requiere de Git instalado en la pc. Para CoC se requiere NodeJs instalado en la pc. La variable $PATH en el archivo es para la preview de fzf
+
 "instalacion de plugins"
 call plug#begin('~/.vim/plugged')
 
@@ -20,10 +21,9 @@ Plug 'tpope/vim-fugitive'
 Plug 'yggdroot/indentline'
 "resaltado de sintaxis"
 Plug 'sheerun/vim-polyglot'
-
 "pone parentesis automaticamente
 Plug 'jiangmiao/auto-pairs'
-
+"tema para vim
 Plug 'glepnir/oceanic-material'
 "todos los buffers aparecen abajo con sus respectivos números"
 Plug 'bling/vim-bufferline'
@@ -50,60 +50,66 @@ Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 
+" ajustes de vim
+
+set autochdir "cambia automaticamente el directorio de trabajo al directorio del buffer actual"
+set autoread "para que lea automaticamente los archivos
 set number "habilita la numeracion
 set mouse=a "permite que se pueda usar el mouse"
 set clipboard=unnamed "permite copiar al portapapeles y pegar desde este"
 set numberwidth=1
 set relativenumber "el número de las demás lineas es relativo a la actual"
-set encoding=Utf-8
-set title  " Muestra el nombre del archivo en la ventana de la terminal
-colorscheme rigel 
-set cursorline  " Resalta la línea actual
-set colorcolumn=220  " Muestra la columna límite a 120 caracteres
-set tabstop=4 " Indentación a 2 espacios
+set encoding=utf-8 "para que el editor pueda abrir archivos con carácteres no normales
+set title  " muestra el nombre del archivo en la ventana de la terminal
+colorscheme rigel  "esquema de color
+set cursorline  " resalta la línea actual
+set colorcolumn=220  " muestra la columna límite a 120 caracteres
+set tabstop=4 " indentación a 2 espacios
 set shiftwidth=2
 set softtabstop=2
 set shiftround
-set expandtab  " Insertar espacios en lugar de <Tab>s
-set hidden  " Permitir cambiar de buffers sin tener que guardarlos
-set ignorecase  " Ignorar mayúsculas al hacer una búsqueda
-set smartcase  " No ignorar mayúsculas si la palabra a buscar contiene mayúsculas
-
-
-let $PATH = "C:\\Program Files\\Git\\usr\\bin;" . $PATH
-set spelllang=en,es  " Corregir palabras usando diccionarios en inglés y español
+set expandtab  " insertar espacios en lugar de <tab>s
+set hidden  " permitir cambiar de buffers sin tener que guardarlos
+set ignorecase  " ignorar mayúsculas al hacer una búsqueda
+set smartcase  " no ignorar mayúsculas si la palabra a buscar contiene mayúsculas
+set spelllang=en,es  " corregir palabras usando diccionarios en inglés y español
 set ruler
 set syntax=on " pone color a la sintaxis
-set termguicolors  " Activa true colors en la terminal
-set guifont=DroidSansMono_Nerd_Font:h11
+set termguicolors  " activa true colors en la terminal
 set complete+=k~/desktop/html.txt "aqui puedo poner un archivo para autocompletar
 
-let NERDTreeQuitOpen=1  "al abrir un archivo con nerdtree, este se cierra"
 
+let nerdtreequitopen=1  "al abrir un archivo con nerdtree, este se cierra"
 let g:gruvbox_constrast_dark = "hard"
 
-"airline configuration
+"configuracion de airline
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts=1 "permite usar fuente parcheada para dar estilo a airline como powerline
+let g:airline_powerline_fonts=1 "permite usar fuente parcheada para dar estilo a airline como powerline. requiere fuente parcheada instalada en pc
 let g:airline_theme='simple' "tema de airline
-let g:rainbow_active = 1 "activa los parentesis de colores
 
-"fzf settings
+" configuracion de fzf 
+
+"NOTA: para activar la preview de fzf es necesario añadir 
+"'C:\Program\Files\Git\usr\bin' a la variable de entorno PATH
+"
 let g:fzf_preview_window = ['right:50%'] "configura la preview de fzf
 let g:fzf_layout = { 'down': '~70%' } "permite configurar lo que ocupa fzf en pantalla
 
-"easyescape settings
+"configuracion de easyescape
 let g:easyescape_chars = { "j": 2 } "caracteres que sustituyen a escape
 let g:easyescape_timeout = 50 "tiempo de espera de los caracteres
 
 
-let g:python3_host_prog='c:\\Python310\\python.exe' "aqui se debe poner la ruta del ejecutable de python3
+let g:python3_host_prog='c:\\python310\\python.exe' "aqui se debe poner la ruta del ejecutable de python3
 
 
+" configuracion de rainbow paretheses
+let g:rainbow_active = 1 "activa los parentesis de colores
 
 filetype plugin on
 
-"FUNCIONES
+"funciones
+
 
 "this function allows me with leader+c commit to git the added previously
 function Commit()
@@ -153,10 +159,12 @@ function Remote()
   call inputsave()
   let l:link=input('Enlace del repositorio: ')
   call inputrestore()
-  if link=''
+  if link==''
     echo 'No debe estar vacio'
+  endif
   :execute 'Git remote add origin '.link
 endfunction
+
 function Add()
   call inputsave()
   let add=input('File name / Folder name / % for current file/: ')
@@ -164,15 +172,7 @@ function Add()
   :execute 'Git add '. add
 endfunction
 
-"jj ahora es escape en modo insertar
-imap jj <esc>
-"espacio no hace nada en modo normal
-nnoremap <space> <Nop> 
-"<leader> es espacio
-let mapleader=' '
-"mapeos de nerdtree
-nmap <Leader>n :NERDTreeToggle<CR>   
-nmap <Leader>m :NERDTreeToggle<cr> :NERDTreeCWD<CR>
+
 
 
 " Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
@@ -183,20 +183,45 @@ let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 
-"remapeos"
+"mapeos
+
+"jj ahora es escape en modo insertar
+imap jj <esc>
+"al presionar escape dos veces en modo normal, quita el resaltado de las busquedas
+nnoremap <esc><esc> :nohlsearch<cr>
+"esto hace que espacio no haga nada en modo normal. necesario para que espacio
+"sea el 'mapleader'
+nnoremap <space> <Nop> 
+"<leader> es espacio
+let mapleader=' '
+
+" esto es para que se apliquen los cambios a vim sin tener que reiniciar
 nmap <Leader>s :so %<CR>
+" esto es para guardar los cambios en los archivos
 nmap <Leader>w :w<CR>
+" esto es para salir de vim forsozamente
 nmap <Leader>q :q!<CR>
+" esto es para dividir la pantalla verticalmente
 nmap <Leader>v :vsp <CR>
-nmap <Leader>d :bd<CR>
-nmap <Leader><Tab> :bp<CR>
+"esto es para ir al siguiente búfer
 nmap <Leader>c :cd ~<CR>
+"esto es para abrir la terminal con el archivo actual como argumento
 nmap <Leader>t :term % <CR>
-nmap <F3> :q!<CR>
+"esto es para abrir la terminal de python con el archivo actual como argumento
 nmap <F6> :term python % <CR>
+"esto es para guardar y salir de vim
 nmap <F2> :wq!<CR>
+"esto es para abrir el archivo init.vim, donde se cambian las configuraciones
+"del editor
 nmap <F5> :edit ~\AppData\Local\nvim\init.vim<CR>
+
+"bufers
 nmap <Tab> :bn<CR>
+" esto es para eliminar el búfer actual
+nmap <Leader><space> :bp<CR>
+"esto es para abrir la ruta de mi usuario
+nmap <Leader>d :bd<CR>
+"esto es para ir al bufer anterior al actual
 
 "mapeos de vimplug
 nmap <Leader>pi :PlugInstall<CR>
@@ -212,27 +237,47 @@ nmap <Leader>gr :call Remote()<CR>
 nmap <Leader>gi :call Initialize()<CR>
 
 "mapeos de fzf
-nmap <Leader>f :Files<cr>
+
+nmap <Leader>f :Files<CR>
 nmap <Leader>l :Lines<CR>
 nmap <Leader>b :Buffers<CR>
 nmap <Leader>T :Tags<CR>
 
+"mapeos de nerdtree
+
+"este hace que se muestre nerdtree
+nmap <Leader>n :NERDTreeToggle<CR>   
+"este es para abrir nerdtree y que vaya a la ruta actual
+nmap <Leader>m :NERDTreeToggle<cr> :NERDTreeCWD<CR>
+
 "etiquetas
-nmap <Leader>t :execute 'tag ' . expand('<cword>') . expand('')
-set autochdir "cambia automaticamente el directorio de trabajo al directorio del buffer actual"
+
+" llevarme a la etiqueta con el nombre de la palabra bajo el cursor
+nmap <Leader>t :execute 'tag ' . expand('<cword>')<cr>
 
 
 
-
+"let $PATH = "C:\Program Files\Git\usr\bin;" . $PATH
 
 
 
 "comandos que se ejecutan automaticamente"
-:autocmd vimenter * silent! :RainbowParentheses
-:autocmd vimenter *.html,.py,.bat,.css,.js,.ps1 silent! :cd %:p:h | :!ctags -R .
+
+"activar el coloreado de parentesis, porque no se activa automaticamente
+:autocmd vimenter * silent! :RainbowParentheses :cd %:p:h  
+" al entrar a archivos html, mapear en modo normal la tecla leader + h para
+" abrir refresh.py (archivo creado por mí para abrir html y refrescar el
+" navegador al cambiar este archivo) con la ruta absoluta del archivo actual
+" como parámetro
+:autocmd bufenter *.html :nmap <Leader>h :silent execute 'term python "c:\users\crist\downloads\creative_projects\python\automate_scripts\refresh.py" ' . expand('%:p') <cr>
+" al salir de un bufer de html, unmapear leader + h para evitar errores con el
+" script
+:autocmd bufleave *.html :unmap <leader>h
+" al abrir un bufer, cambiar automaticamente la ruta en nerdtree
+:autocmd bufenter * silent! :NERDTreeCWD
+" generar etiquetas al guardar un archivo
 :autocmd bufwrite * :!ctags -R %
 
-let g:tagbar_ctags_bin = 'C:\ProgramData\chocolatey\bin\ctags.exe' "aqui va la ruta de ctags, y debe ser agregada a PATH
 
 
 
