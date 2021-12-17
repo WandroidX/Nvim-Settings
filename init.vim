@@ -25,7 +25,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'jiangmiao/auto-pairs'
 "tema para vim
 Plug 'glepnir/oceanic-material'
-"todos los buffers aparecen abajo con sus respectivos números"
+"todos los buffers aparecen abajo con sus respectivos nÃºmeros"
 Plug 'bling/vim-bufferline'
 "instala nerdtree, una especie de explorador de archivos para vim"
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
@@ -52,44 +52,85 @@ call plug#end()
 
 " ajustes de vim
 
+color rigel "esquema de color para el editor
+"esto es para cambiar los colores de la linea resaltada. color= gris
+hi CursorLine gui=none guibg=#222222
+" esto es para cambiar los colores del resaltado de las busquedas
+hi Search guibg=gold  guifg=black
+" cambiar el fondo del editor a un azul oscuro
+hi normal guibg=#000010 
+" cambiar la linea actual
+hi cursorlinenr guibg=#222222 guifg=gold
+"cambiar los demÃ¡s costados de linea
+hi linenr guibg=#000010 guifg=white
+"cambiar el color de los comentarios
+hi comment guifg=#0F52BA
+"cambiar color de los parentesis al poner el cursor sobre ellos
+hi matchparen guifg=black guibg=green
+"cambia el color de los types en vim. ej: matchparen y comment  y de import y
+"from en python
+hi type guifg=00FFFF
+"cambia el color de los nombres de funciones
+hi function guifg=#3FFF00	
+"cambia el color de las declaraciones como if, as, def, return en python a
+"gris
+hi statement guifg=#708090	 
+"cambia el color de los caracteres especiales, como \\ y \n en python
+hi special guifg=#FFD700	
+"cambia el color de los strings a color JADE
+hi string guifg=#00A86B	
+"cambia el color de los nÃºmeros
+hi number guifg=#E52B50
+"cambia el color de los condicionales
+hi conditional guifg=#FF6600	
+"cambia el color de palabras clave, como while y for
+hi keyword guifg=#ff00ff 
+"cambia el color de los operadores. ej: =, +, in, etc
+hi operator guifg=#FF7F50	  
+
+
+
 set autochdir "cambia automaticamente el directorio de trabajo al directorio del buffer actual"
 set autoread "para que lea automaticamente los archivos
 set number "habilita la numeracion
 set mouse=a "permite que se pueda usar el mouse"
 set clipboard=unnamed "permite copiar al portapapeles y pegar desde este"
 set numberwidth=1
-set relativenumber "el número de las demás lineas es relativo a la actual"
-set encoding=utf-8 "para que el editor pueda abrir archivos con carácteres no normales
+set relativenumber "el nÃºmero de las demÃ¡s lineas es relativo a la actual"
+set encoding=utf-8 "para que el editor pueda abrir archivos con carÃ¡cteres no normales
 set title  " muestra el nombre del archivo en la ventana de la terminal
-colorscheme rigel  "esquema de color
-set cursorline  " resalta la línea actual
-set colorcolumn=220  " muestra la columna límite a 120 caracteres
-set tabstop=4 " indentación a 2 espacios
+set cursorline  " resalta la lÃ­nea actual
+set colorcolumn=220  " muestra la columna lÃ­mite a 120 caracteres
+set tabstop=4 " indentaciÃ³n a 2 espacios
 set shiftwidth=2
 set softtabstop=2
 set shiftround
 set expandtab  " insertar espacios en lugar de <tab>s
 set hidden  " permitir cambiar de buffers sin tener que guardarlos
-set ignorecase  " ignorar mayúsculas al hacer una búsqueda
-set smartcase  " no ignorar mayúsculas si la palabra a buscar contiene mayúsculas
-set spelllang=en,es  " corregir palabras usando diccionarios en inglés y español
+set ignorecase  " ignorar mayÃºsculas al hacer una bÃºsqueda
+set smartcase  " no ignorar mayÃºsculas si la palabra a buscar contiene mayÃºsculas
+set spelllang=en,es  " corregir palabras usando diccionarios en inglÃ©s y espaÃ±ol
 set ruler
 set syntax=on " pone color a la sintaxis
 set termguicolors  " activa true colors en la terminal
 set complete+=k~/desktop/html.txt "aqui puedo poner un archivo para autocompletar
 
 
-let nerdtreequitopen=1  "al abrir un archivo con nerdtree, este se cierra"
-let g:gruvbox_constrast_dark = "hard"
+
+"configuracion de ctags
+"necesario para evitar errores al generar las etiquetas con ctags. aqui va la ruta en la que se encuentra su ejecutable
+let g:tagbar_ctags_bin='c:\ProgramData\chocolatey\bin\ctags.exe'
 
 "configuracion de airline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts=1 "permite usar fuente parcheada para dar estilo a airline como powerline. requiere fuente parcheada instalada en pc
 let g:airline_theme='simple' "tema de airline
 
+let g:airline#extensions#nerdtree_statusline = 1
+
 " configuracion de fzf 
 
-"NOTA: para activar la preview de fzf es necesario añadir 
+"NOTA: para activar la preview de fzf es necesario aÃ±adir 
 "'C:\Program\Files\Git\usr\bin' a la variable de entorno PATH
 "
 let g:fzf_preview_window = ['right:50%'] "configura la preview de fzf
@@ -99,7 +140,17 @@ let g:fzf_layout = { 'down': '~70%' } "permite configurar lo que ocupa fzf en pa
 let g:easyescape_chars = { "j": 2 } "caracteres que sustituyen a escape
 let g:easyescape_timeout = 50 "tiempo de espera de los caracteres
 
+"configuracion de ultisnips
 
+" Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
+" - https://github.com/Valloric/YouCompleteMe
+" - https://github.com/nvim-lua/completion-nvim
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+
+"configuracion de python
 let g:python3_host_prog='c:\\python310\\python.exe' "aqui se debe poner la ruta del ejecutable de python3
 
 
@@ -110,18 +161,17 @@ filetype plugin on
 
 "funciones
 
-
 "this function allows me with leader+c commit to git the added previously
 function Commit()
-  call inputsave()
-  let cometer = input('Desea guardar los cambios en git? Y/y/N/n: ')
-  let mensaje= input('Mensaje: ')
-  call inputrestore()  
-  if cometer=="Y" || cometer=="y" 
-    :execute 'Git commit -m '.'"'. mensaje.'"'
-  else
-    echo "Operación cancelada"
-  endif
+call inputsave()
+let cometer = input('Desea guardar los cambios en git? Y/y/N/n: ')
+let mensaje= input('Mensaje: ')
+call inputrestore()  
+if cometer=="Y" || cometer=="y" 
+:execute 'Git commit -m '.'"'. mensaje.'"'
+else
+echo "OperaciÃ³n cancelada"
+endif
 endfunction
 
 
@@ -129,58 +179,51 @@ endfunction
 
 "this function allows me initialize a repository 
 function Initialize()
-  call inputsave()
-  let init = input('desea inicializar un proyecto en git? Y/y/N/n: ')
-  call inputrestore()  
-  if init=="Y" || init=="y" 
-    :Git init
-    echo "Inicializado"
-  else
-    echo "Operación cancelada"
-  endif
+call inputsave()
+let init = input('desea inicializar un proyecto en git? Y/y/N/n: ')
+call inputrestore()  
+if init=="Y" || init=="y" 
+:Git init
+echo "Inicializado"
+else
+echo "OperaciÃ³n cancelada"
+endif
 endfunction
 
 "this function allow me 
 function Pushear()
-  call inputsave()
-  let l:push = input('desea guardar el proyecto en git? Y/y/N/n: ')
-  call inputrestore()  
-  if push=="Y" || push=="y" 
-    call inputsave()
-    let l:branch = input('En que rama desea guardarlo? ')
-    call inputrestore()  
-    :execute 'Git push -u origin '. branch 
-  else
-    echo "Operación cancelada"
-  endif
+call inputsave()
+let l:push = input('desea guardar el proyecto en git? Y/y/N/n: ')
+call inputrestore()  
+if push=="Y" || push=="y" 
+call inputsave()
+let l:branch = input('En que rama desea guardarlo? ')
+call inputrestore()  
+:execute 'Git push -u origin '. branch 
+else
+echo "OperaciÃ³n cancelada"
+endif
 endfunction
 
 function Remote()
-  call inputsave()
-  let l:link=input('Enlace del repositorio: ')
-  call inputrestore()
-  if link==''
-    echo 'No debe estar vacio'
-  endif
-  :execute 'Git remote add origin '.link
+call inputsave()
+let l:link=input('Enlace del repositorio: ')
+call inputrestore()
+if link==''
+echo 'No debe estar vacio'
+endif
+:execute 'Git remote add origin '.link
 endfunction
 
 function Add()
-  call inputsave()
-  let add=input('File name / Folder name / % for current file/: ')
-  call inputrestore()
-  :execute 'Git add '. add
+call inputsave()
+let add=input('File name / Folder name / % for current file/: ')
+call inputrestore()
+:execute 'Git add '. add
 endfunction
 
 
 
-
-" Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
-" - https://github.com/Valloric/YouCompleteMe
-" - https://github.com/nvim-lua/completion-nvim
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 
 "mapeos
@@ -203,7 +246,7 @@ nmap <Leader>w :w<CR>
 nmap <Leader>q :q!<CR>
 " esto es para dividir la pantalla verticalmente
 nmap <Leader>v :vsp <CR>
-"esto es para ir al siguiente búfer
+"esto es para ir al siguiente bÃºfer
 nmap <Leader>c :cd ~<CR>
 "esto es para abrir la terminal con el archivo actual como argumento
 nmap <Leader>t :term % <CR>
@@ -211,13 +254,13 @@ nmap <Leader>t :term % <CR>
 nmap <F6> :term python % <CR>
 "esto es para guardar y salir de vim
 nmap <F2> :wq!<CR>
-"esto es para abrir el archivo init.vim, donde se cambian las configuraciones
+"esto es para abrir ej archivo init.vim, donde se cambian las configuraciones
 "del editor
-nmap <F5> :edit ~\AppData\Local\nvim\init.vim<CR>
+nmap <F5> :e $MYVIMRC<cr>
 
 "bufers
 nmap <Tab> :bn<CR>
-" esto es para eliminar el búfer actual
+" esto es para eliminar el bÃºfer actual
 nmap <Leader><space> :bp<CR>
 "esto es para abrir la ruta de mi usuario
 nmap <Leader>d :bd<CR>
@@ -242,13 +285,15 @@ nmap <Leader>f :Files<CR>
 nmap <Leader>l :Lines<CR>
 nmap <Leader>b :Buffers<CR>
 nmap <Leader>T :Tags<CR>
+nmap <leader>r :Rg<CR>
+
 
 "mapeos de nerdtree
 
 "este hace que se muestre nerdtree
-nmap <Leader>n :NERDTreeToggle<CR>   
+nmap <Leader>n :NERDTree<cr>
 "este es para abrir nerdtree y que vaya a la ruta actual
-nmap <Leader>m :NERDTreeToggle<cr> :NERDTreeCWD<CR>
+nmap <Leader>m :NERDTreeCWD<CR>
 
 "etiquetas
 
@@ -257,8 +302,6 @@ nmap <Leader>t :execute 'tag ' . expand('<cword>')<cr>
 
 
 
-"let $PATH = "C:\Program Files\Git\usr\bin;" . $PATH
-
 
 
 "comandos que se ejecutan automaticamente"
@@ -266,20 +309,16 @@ nmap <Leader>t :execute 'tag ' . expand('<cword>')<cr>
 "activar el coloreado de parentesis, porque no se activa automaticamente
 :autocmd vimenter * silent! :RainbowParentheses :cd %:p:h  
 " al entrar a archivos html, mapear en modo normal la tecla leader + h para
-" abrir refresh.py (archivo creado por mí para abrir html y refrescar el
+" abrir refresh.py (archivo creado por mÃ­ para abrir html y refrescar el
 " navegador al cambiar este archivo) con la ruta absoluta del archivo actual
-" como parámetro
+" como parÃ¡metro
 :autocmd bufenter *.html :nmap <Leader>h :silent execute 'term python "c:\users\crist\downloads\creative_projects\python\automate_scripts\refresh.py" ' . expand('%:p') <cr>
 " al salir de un bufer de html, unmapear leader + h para evitar errores con el
 " script
-:autocmd bufleave *.html :unmap <leader>h
-" al abrir un bufer, cambiar automaticamente la ruta en nerdtree
-:autocmd bufenter * silent! :NERDTreeCWD
+:autocmd bufleave *.html :unmap <Leader>h
 " generar etiquetas al guardar un archivo
 :autocmd bufwrite * :!ctags -R %
 
-
-
-
-
-
+let g:Tlist_Ctags_Cmd='c:\ProgramData\chocolatey\bin\ctags.exe'
+"necesario para evitar errores al generar las etiquetas con ctags. aqui va la ruta en la que se encuentra su ejecutable
+let g:tagbar_ctags_bin='c:\ProgramData\chocolatey\bin\ctags.exe'
