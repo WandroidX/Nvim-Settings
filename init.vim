@@ -1,4 +1,3 @@
-"NOTA: Ctags debe ser agregado a PATH y la ruta de python1 o 2 en una variable llamada g:python3_host_prog. Para los plugins se requiere de Git instalado en la pc. Para CoC se requiere NodeJs instalado en la pc. La variable $PATH en el archivo es para la preview de fzf
 
 call plug#begin('~/.vim/plugged')
 
@@ -9,13 +8,13 @@ Plug 'nvim-lualine/lualine.nvim'
 "bufferline"
 Plug 'noib3/nvim-cokeline'
 
+"Sirve para mejorar el comando 'f' y 'F' en vim"
+Plug 'https://github.com/justinmk/vim-sneak'
 "Iconos para neovim
 Plug 'kyazdani42/nvim-web-devicons' " If you want devicons
 
 "tema de color de vim"
 Plug 'dracula/vim'
-
-
 
 "indentline
 Plug 'lukas-reineke/indent-blankline.nvim'
@@ -32,11 +31,12 @@ Plug 'https://github.com/tpope/vim-surround'
 "snippets para vim
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-
 "para ayudarme a salir de modo insertar mas rapido 
 Plug 'zhou13/vim-easyescape'
 "integrar git a vim"
 Plug 'tpope/vim-fugitive'
+"añade los íconos de diff al archivo que estoy editando"
+Plug 'https://github.com/airblade/vim-gitgutter'
 "resaltado de sintaxis"
 Plug 'sheerun/vim-polyglot'
 "tema para vim
@@ -50,7 +50,6 @@ Plug 'christoomey/vim-tmux-navigator'
 
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig'
-""NUEVO AUTOCOMPLETADO"
 
 "estos son plugins cmp, para autocompletado mediante los servidores lsp"
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -59,22 +58,38 @@ Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+
+"sirve para hacer debugging - el segundo es para mejorar la interfaz"
+Plug 'https://github.com/mfussenegger/nvim-dap'
+Plug 'https://github.com/mfussenegger/nvim-dap-ui'
+
+"redimensiona los split al moverte"
+Plug 'https://github.com/camspiers/lens.vim'
+
+"sirve para buscar y reemplazar en varios archivos a la vez"
+Plug 'https://github.com/nvim-pack/nvim-spectre'
+
+"sirve para administrar proyectos"
+Plug 'https://github.com/ahmedkhalf/project.nvim'
+
+"revisa el código y me muestra los errores en el linteo (no sé como se dice en
+"español)"
+Plug 'dense-analysis/ale'
+
 call plug#end()
 
 " ajustes de vim
 color dracula "esquema de color para el editor
-
 set autochdir "cambia automaticamente el directorio de trabajo al directorio del buffer actual"
 set autoread "para que lea automaticamente los archivos
 set number "habilita la numeracion
-"set mouse=a "permite que se pueda usar el mouse"
 set clipboard=unnamed "permite copiar al portapapeles y pegar desde este"
 set numberwidth=1
 set relativenumber "el número de las demás lineas es relativo a la actual"
 set encoding=utf-8 "para que el editor pueda abrir archivos con carácteres no normales
 set title  " muestra el nombre del archivo en la ventana de la terminal
 set cursorline  " resalta la línea actual
-set colorcolumn=220  " muestra la columna límite a 120 caracteres
+set colorcolumn=220  " muestra la columna límite a 120 caracteres 
 set tabstop=4 " indentación a 2 espacios
 set shiftwidth=2
 set softtabstop=2
@@ -88,9 +103,15 @@ set ruler
 set syntax=on " pone color a la sintaxis
 set termguicolors  " activa true colors en la terminal
 set complete+=k~/desktop/html.txt "aqui puedo poner un archivo para autocompletar
+set completeopt=menu,menuone,noselect
 
-
-
+"This is for the backup files"
+set backup
+set undofile
+set writebackup
+set backupdir=~/.config/nvim/nvim_backups
+set termguicolors " this variable must be enabled for colors to be applied properly
+filetype plugin on
 
 
 "configuracion de easyescape
@@ -100,24 +121,100 @@ let g:easyescape_timeout = 500 "tiempo de espera de los caracteres
 "configuracion de ultisnips
 
 " Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
-" - https://github.com/Valloric/YouCompleteMe
-" - https://github.com/nvim-lua/completion-nvim
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 
-"configuracion de python
-let g:python3_host_prog='c:\\python310\\python.exe' "aqui se debe poner la ruta del ejecutable de python3
-
 " configuracion de rainbow paretheses
 let g:rainbow_active = 1 "activa los parentesis de colores
 
-filetype plugin on
-"funciones
+"indent_guides config - neccesary"
+let g:indent_guides_guide_size = 1
+let g:indent_guides_enable_on_start = 1
+
+"ALE configuration"
+let g:ale_fixers = {
+\ '*': ['remove_trailing_lines', 'trim_whitespace'],
+\    'python': ['black']
+\}
+
+"keyboard maps
+
+"jj ahora es escape en modo insertar
+imap jj <esc>
+"al presionar escape dos veces en modo normal, quita el resaltado de las busquedas
+nnoremap <esc><esc> :nohlsearch<cr>
+"esto hace que espacio no haga nada en modo normal. necesario para que espacio
+"sea el 'mapleader'
+nnoremap <space> <Nop> 
+"<leader> es espacio
+let mapleader= ' '
+"This lets me use Sneak_f with f in normal mode"
+map f <Plug>Sneak_f
+map F <Plug>Sneak_F
+
+" esto es para guardar los cambios en los archivos
+nmap <Leader>w :w<CR>
+" esto es para salir de vim forsozamente
+nmap <Leader>q :q!<CR>
+" esto es para dividir la pantalla verticalmente
+nmap <Leader>v :vsp <CR>
+"esto es para ir al siguiente búfer
+nmap <C-c> :cd ~<CR>
+"esto es para abrir la terminal con el archivo actual como argumento
+nmap <Leader>tw :term <CR>
+"esto es para guardar y salir de vim
+nmap <F2> :wq!<CR>
+"esto es para abrir ej archivo init.vim, donde se cambian las configuraciones
+"del editor
+nmap <leader>ev :e ~/.config/nvim/init.vim<cr>
+nmap <leader>s :so ~/.config/nvim/init.vim<cr>
+
+" esto es para eliminar el búfer actual
+nmap <Leader>d :bd<CR>
+
+"mapeos de vimplug
+nmap <Leader>pi :PlugInstall<CR>
+nmap <Leader>pc :PlugClean<CR>
+
+"nvimtree maps"
+nnoremap <C-n> :NvimTreeToggle<CR> 
+nnoremap <leader>r :NvimTreeRefresh<CR> 
+nnoremap <leader>n :NvimTreeFindFile<CR>
+
+"mapeos de fugitive
+nmap <Leader>gp :call Pushear()<CR>
+nmap <Leader>gc :call Commit()<CR> 
+nmap <Leader>ga :call Add()<CR>
+nmap <Leader>gl :Git log<CR>
+nmap <Leader>gs :Git status<CR>
+nmap <Leader>gr :call Remote()<CR>
+nmap <Leader>gi :call Initialize()<CR>
+
+"telescope maps"
+nmap <leader>tf :Telescope find_files<cr>
+nmap <leader>tb :Telescope buffers<cr>
+nmap <leader>tg :Telescope live_grep<cr>
+nmap <leader>tc :Telescope git_commits<cr>
+nmap <leader>tp :Telescope projects<cr>
+nmap <leader>tm :Telescope marks<cr>
 
 
+"this maps are for write double of the characters and left the cursor in
+"middle"
+imap [ []<left>
+imap { {}<left>
+imap ( ()<left>
+inoremap ' ''<Esc>i
+inoremap <c-'> '<Esc>a
+inoremap " ""<Esc>i
 
+
+"terminal maps"
+:tnoremap jj <C-\><C-n>
+
+" git functions made by me
 function Remote()
 call inputsave()
     let l:link=input('Enlace del repositorio: ')
@@ -158,7 +255,8 @@ else
     echo "Operación cancelada"
 endif
 endfunction
-"this function allow me 
+
+"this function allow me  send to git the commited changes
 function Pushear()
 call inputsave()
     let l:push = input('desea guardar el proyecto en git? Y/y/N/n/Enter: ')
@@ -169,152 +267,39 @@ if push=="Y" || push=="y" || push==''
     call inputrestore()  
 
     if l:branch==''
-        branch = 'master'
+        :execute 'Git push origin master'
+    else
+        :execute 'Git push origin '. branch 
     endif
-    :execute 'Git push origin '. branch 
 else
     echo "Operación cancelada"
 endif
 endfunction
 
 
-function Add()
+"This funcion allow me write filenames and add to staging area
+function Add() 
 call inputsave()
-let add=input('File name / Folder name / % for current file/: ')
+let add=input('File name / Folder name / "%" for current file/ "." for all files in folder:\n')
 call inputrestore()
 :execute 'Git add '. add
 endfunction
 
 
-"mapeos
 
-"jj ahora es escape en modo insertar
-imap jj <esc>
-"al presionar escape dos veces en modo normal, quita el resaltado de las busquedas
-nnoremap <esc><esc> :nohlsearch<cr>
-"esto hace que espacio no haga nada en modo normal. necesario para que espacio
-"sea el 'mapleader'
-nnoremap <space> <Nop> 
-"<leader> es espacio
-let mapleader= ' '
-
-nmap <leader>x :call Formatear()<cr>
-" esto es para guardar los cambios en los archivos
-nmap <Leader>w :w<CR>
-" esto es para salir de vim forsozamente
-nmap <Leader>q :q!<CR>
-" esto es para dividir la pantalla verticalmente
-nmap <Leader>v :vsp <CR>
-"esto es para ir al siguiente búfer
-nmap <C-c> :cd ~<CR>
-"esto es para abrir la terminal con el archivo actual como argumento
-nmap <Leader>tw :term <CR>
-"esto es para guardar y salir de vim
-nmap <F2> :wq!<CR>
-"esto es para abrir ej archivo init.vim, donde se cambian las configuraciones
-"del editor
-nmap <leader>ev :e $myvimrc<cr>
-nmap <leader>s :so %<cr>
-
-"bufers
-"nmap <Tab> :bn<CR>
-" esto es para eliminar el búfer actual
-"nmap <Leader><space> :bp<CR>
-"esto es para abrir la ruta de mi usuario
-nmap <Leader>d :bd<CR>
-"esto es para ir al bufer anterior al actual
-
-"mapeos de vimplug
-nmap <Leader>pi :PlugInstall<CR>
-nmap <Leader>pc :PlugClean<CR>
-
-"mapeos de fugitive
-nmap <Leader>gp :call Pushear()<CR>
-nmap <Leader>gc :call Commit()<CR> 
-nmap <Leader>ga :call Add()<CR>
-nmap <Leader>gl :Git log<CR>
-nmap <Leader>gs :Git status<CR>
-nmap <Leader>gr :call Remote()<CR>
-nmap <Leader>gi :call Initialize()<CR>
-
-"mapeos de fzf
-
-
-"mapeos de nerdtree
-
-"etiquetas
-
-
-"mapeos de python 
-
-"abrir terminal de python con bufer actual como argumento
-
-
-
-"comandos que se ejecutan automaticamente"
+"commands that executes automaticly when an event occurs"
 
 "activar el coloreado de parentesis, porque no se activa automaticamente
 :autocmd vimenter * silent! :RainbowParentheses :cd %:p:h  
-" al entrar a archivos html, mapear en modo normal la tecla leader + h para
-" abrir refresh.py (archivo creado por mí para abrir html y refrescar el
-" navegador al cambiar este archivo) con la ruta absoluta del archivo actual
-" como parámetro
-:autocmd bufenter *.html :nmap <Leader>h :silent execute 'term python "c:\users\crist\downloads\creative_projects\python\automate_scripts\refresh.py" ' . expand('%:p') <cr>
-" al salir de un bufer de html, unmapear leader + h para evitar errores con el
-" script
-:autocmd bufleave *.html :unmap <Leader>h
-"comando para ejecutar el archivo actual con: node, python y powershell
+"when i enter on .py or .js files, the <leader>run executes the current file
+"with respective program"
 :autocmd bufenter *.py :nmap <leader>run :term python %<cr>
 :autocmd bufenter *.js :nmap <leader>run :term node %<cr>
-:autocmd bufenter *.ps1 :nmap <leader>run :term powershell %<cr>
 
 
-imap [ []<left>
-imap { {}<left>
-imap ( ()<left>
-inoremap ' ''<Esc>i
-inoremap <c-'> '<Esc>a
-inoremap " ""<Esc>i
-
-"la funcion verifica si el bufer en el que estoy actualmente es el init.vim, y si 
-"es así mapea leader + S para usar :so % 
-function Ruta()
-  let path = expand('%:p') 
-  if path == 'C:\Users\crist\Appdata\Local\nvim\init.vim'
-nmap <leader>s :so %<cr>
-else
-unmap <leader>s
-
-endif
-
-endfunction
-
-
-function Formatear()
-  execute 'term python c:\users\crist\downloads\creative_projects\python\automate_scripts\formateador.py ' . expand('%')
-  echo 'EL ARCHIVO ACTUAL HA SIDO FORMATEADO'
-endfunction
-
-
-:tnoremap jj <C-\><C-n>
-
-set termguicolors
-
-lua << EOF
-  require('lualine').setup()
-EOF
-set backup
-set undofile
-set writebackup
-set backupdir=~/nvim_backups
-
-
-
-nnoremap <C-n> :NvimTreeToggle<CR> 
-nnoremap <leader>r :NvimTreeRefresh<CR> 
-nnoremap <leader>n :NvimTreeFindFile<CR>
-
-set termguicolors " this variable must be enabled for colors to be applied properly
+"""""""""" FROM HERE, WILL BE ONLY LUA CONFIG FOR PLUGINS
+"""""""""" FROM HERE, WILL BE ONLY LUA CONFIG FOR PLUGINS
+"""""""""" FROM HERE, WILL BE ONLY LUA CONFIG FOR PLUGINS
 
 
 " nvim-tree requiere esto
@@ -451,45 +436,18 @@ require('lualine').setup {
 }
 EOF
 
-"telescope maps"
-nmap <leader>tf :Telescope find_files<cr>
-nmap <leader>tb :Telescope buffers<cr>
-nmap <leader>tg :Telescope grep_string<cr>
-nmap <leader>tc :Telescope git_commits<cr>
 
-let g:indent_guides_guide_size = 1
-let g:indent_guides_enable_on_start = 1
-
-set completeopt=menu,menuone,noselect
 
 "configuracion para cokeline. requerido"
 lua <<EOF
-local map = vim.api.nvim_set_keymap
-
--- Focus the previous/next buffer
-map('n', '<Leader><space>',   '<Plug>(cokeline-focus-prev)',  { silent = true })
-map('n', '<Tab>',     '<Plug>(cokeline-focus-next)',  { silent = true })
-
--- Switch the position of the current buffer with the previous/next buffer.
-map('n', '<c-s>p', '<Plug>(cokeline-switch-prev)', { silent = true })
-map('n', '<c-s>n', '<Plug>(cokeline-switch-next)', { silent = true })
-
-
--- Focus a buffer by its `pick_letter`.
-map('n', '<c-p>c', '<Plug>(cokeline-pick-close)', { silent = true })
-
--- Close a buffer by its `pick_letter`.
-map('n', '<c-p>f', '<Plug>(cokeline-pick-focus)', { silent = true })
-
-for i = 1,9 do
-  map('n', ('<Leader>f%s'):format(i),      ('<Plug>(cokeline-focus-%s)'):format(i),  { silent = true })
-  map('n', ('<Leader>s%s'):format(i), ('<Plug>(cokeline-switch-%s)'):format(i), { silent = true })
-end
 EOF
 
 
 " cokeline configuracion
 lua <<EOF
+
+
+
 local get_hex = require('cokeline/utils').get_hex
 local mappings = require('cokeline/mappings')
 
@@ -513,7 +471,7 @@ local components = {
 
   separator = {
     text = function(buffer)
-      return buffer.index ~= 1 and '▏' or ''
+      return buffer.index ~= 1 and '\\' or ''
     end,
     truncation = { priority = 1 }
   },
@@ -643,6 +601,29 @@ require('cokeline').setup({
     components.space,
   },
 })
+
+
+local map = vim.api.nvim_set_keymap
+
+-- Focus the previous/next buffer
+map('n', '<Leader><space>',   '<Plug>(cokeline-focus-prev)',  { silent = true })
+map('n', '<Tab>',     '<Plug>(cokeline-focus-next)',  { silent = true })
+
+-- Switch the position of the current buffer with the previous/next buffer.
+map('n', '<c-s>p', '<Plug>(cokeline-switch-prev)', { silent = true })
+map('n', '<c-s>n', '<Plug>(cokeline-switch-next)', { silent = true })
+
+
+-- Focus a buffer by its `pick_letter`.
+map('n', '<c-p>c', '<Plug>(cokeline-pick-close)', { silent = true })
+
+-- Close a buffer by its `pick_letter`.
+map('n', '<c-p>f', '<Plug>(cokeline-pick-focus)', { silent = true })
+
+for i = 1,9 do
+  map('n', ('<Leader>f%s'):format(i),      ('<Plug>(cokeline-focus-%s)'):format(i),  { silent = true })
+  map('n', ('<Leader>s%s'):format(i), ('<Plug>(cokeline-switch-%s)'):format(i), { silent = true })
+end
 EOF
 
 
@@ -743,6 +724,9 @@ lua <<EOF
 
 
 
+    -- this is required for the functioning of lsp-installer
+    require("nvim-lsp-installer").setup {}
+
 
   local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -761,17 +745,12 @@ require('lspconfig')['cssls'].setup {
 require( 'lspconfig' )['clangd'].setup{
     capabilities = capabilities
 }
-  require('lspconfig')['tsserver'].setup {
-    capabilities = capabilities
-  }
-  require('lspconfig')['pyright'].setup {
-    capabilities = capabilities
-  }
-  require('lspconfig')['powershell_es'].setup {
-    bundle_path = 'C:/Users/crist/AppData/Local/coc/extensions/node_modules/coc-powershell/PowerShellEditorServices',
-    shell = 'pwsh',
-    capabilities = capabilities
-  }
+require('lspconfig')['tsserver'].setup {
+capabilities = capabilities
+}
+require('lspconfig')['pyright'].setup {
+capabilities = capabilities
+}
 
 EOF
 
@@ -791,7 +770,6 @@ vim.keymap.set('n', '<space>p', vim.diagnostic.setloclist, opts)
 local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap=true, silent=true, buffer=bufnr }
@@ -842,11 +820,6 @@ require( 'lspconfig' )['clangd'].setup{
     on_attach = on_attach,
     flags = lsp_flags,
 }
-require('lspconfig')['powershell_es'].setup{
-  bundle_path = 'C:/Users/crist/AppData/Local/coc/extensions/node_modules/coc-powershell/PowerShellEditorServices',
-  on_attach = on_attach,
-  flags = lsp_flags,
-}
 
 local lsp_defaults = {
   flags = {
@@ -861,4 +834,14 @@ local lsp_defaults = {
 }
 EOF
 
+"here will be the project.nvim setup"
+lua <<EOF
+    require("project_nvim").setup {
 
+}
+EOF
+
+"project.nvim integration with telescope"
+lua <<EOF
+    require('telescope').load_extension('projects')
+EOF
