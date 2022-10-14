@@ -1,36 +1,33 @@
-
 call plug#begin('~/.vim/plugged')
-
 
 "lualine"
 Plug 'nvim-lualine/lualine.nvim'
-
 "bufferline"
 Plug 'noib3/nvim-cokeline'
-
 "Sirve para mejorar el comando 'f' y 'F' en vim"
 Plug 'https://github.com/justinmk/vim-sneak'
 "Iconos para neovim
 Plug 'kyazdani42/nvim-web-devicons' " If you want devicons
-
 "tema de color de vim"
 Plug 'dracula/vim'
-
 "indentline
 Plug 'lukas-reineke/indent-blankline.nvim'
-
 " file explorer"
 Plug 'kyazdani42/nvim-tree.lua'
-
 " telescope fzf"
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-lua/popup.nvim'
+"sirve para administrar proyectos - junto con telescope"
+Plug 'https://github.com/ahmedkhalf/project.nvim'
 
 Plug 'https://github.com/tpope/vim-surround'
 
 "snippets para vim
+"vim snippets"
+Plug 'https://github.com/honza/vim-snippets'
+"ultisnips"
 Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
 "para ayudarme a salir de modo insertar mas rapido 
 Plug 'zhou13/vim-easyescape'
 "integrar git a vim"
@@ -42,40 +39,38 @@ Plug 'sheerun/vim-polyglot'
 "tema para vim
 "pone colores a las parejas de parentesis para verlos mas facilmente"
 Plug 'junegunn/rainbow_parentheses.vim' 
-""buscador difuso
 "me permite comentar presionando leader+cc"
 Plug 'preservim/nerdcommenter'
 "permite moverse entre pestañas con ctrl + direccion vimniana"
 Plug 'christoomey/vim-tmux-navigator'
 
-Plug 'williamboman/nvim-lsp-installer'
-Plug 'neovim/nvim-lspconfig'
-
 "estos son plugins cmp, para autocompletado mediante los servidores lsp"
-Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
-Plug 'quangnguyen30192/cmp-nvim-ultisnips'
-
-"sirve para hacer debugging - el segundo es para mejorar la interfaz"
-Plug 'https://github.com/mfussenegger/nvim-dap'
-Plug 'https://github.com/mfussenegger/nvim-dap-ui'
-
+"sirve para hacer debugging 
+Plug 'https://github.com/puremourning/vimspector'
 "redimensiona los split al moverte"
 Plug 'https://github.com/camspiers/lens.vim'
-
 "sirve para buscar y reemplazar en varios archivos a la vez"
 Plug 'https://github.com/nvim-pack/nvim-spectre'
-
-"sirve para administrar proyectos"
-Plug 'https://github.com/ahmedkhalf/project.nvim'
-
 "revisa el código y me muestra los errores en el linteo (no sé como se dice en
 "español)"
 Plug 'dense-analysis/ale'
+"smooth scroll when using c-f c-d c-u c-b"
+Plug 'karb94/neoscroll.nvim'
 
+"nvim games"
+"lichess chess game in nvim"
+Plug 'luk400/vim-lichess'
+"tetris game for nvim"
+Plug 'alec-gibson/nvim-tetris'
+"coc-nvim - autocompletado"
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+"omnisharp to get csharp completion with coc"
+Plug 'OmniSharp/omnisharp-vim'
 call plug#end()
 
 " ajustes de vim
@@ -83,18 +78,17 @@ color dracula "esquema de color para el editor
 set autochdir "cambia automaticamente el directorio de trabajo al directorio del buffer actual"
 set autoread "para que lea automaticamente los archivos
 set number "habilita la numeracion
-set clipboard=unnamed "permite copiar al portapapeles y pegar desde este"
+set clipboard+=unnamedplus
 set numberwidth=1
 set relativenumber "el número de las demás lineas es relativo a la actual"
 set encoding=utf-8 "para que el editor pueda abrir archivos con carácteres no normales
 set title  " muestra el nombre del archivo en la ventana de la terminal
 set cursorline  " resalta la línea actual
 set colorcolumn=220  " muestra la columna límite a 120 caracteres 
-set tabstop=4 " indentación a 2 espacios
-set shiftwidth=2
-set softtabstop=2
-set shiftround
+set tabstop=4 " indentación a 4 espacios
 set expandtab  " insertar espacios en lugar de <tab>s
+set shiftwidth=4
+
 set hidden  " permitir cambiar de buffers sin tener que guardarlos
 set ignorecase  " ignorar mayúsculas al hacer una búsqueda
 set smartcase  " no ignorar mayúsculas si la palabra a buscar contiene mayúsculas
@@ -102,21 +96,26 @@ set spelllang=en,es  " corregir palabras usando diccionarios en inglés y españ
 set ruler
 set syntax=on " pone color a la sintaxis
 set termguicolors  " activa true colors en la terminal
-set complete+=k~/desktop/html.txt "aqui puedo poner un archivo para autocompletar
 set completeopt=menu,menuone,noselect
 
 "This is for the backup files"
 set backup
 set undofile
 set writebackup
-set backupdir=~/.config/nvim/nvim_backups
+set backupdir=~\AppData\Local\nvim_backups
 set termguicolors " this variable must be enabled for colors to be applied properly
 filetype plugin on
 
 
+"important: here will be the python3 executable path to avoid issues with the
+"venv
+
+"omnisharp config -- needed to functionality"
+let g:OmniSharp_server_use_net6 = 1
+
 "configuracion de easyescape
-let g:easyescape_chars = { "j": 2 } "caracteres que sustituyen a escape
-let g:easyescape_timeout = 500 "tiempo de espera de los caracteres
+let g:easyescape_chars = { "j": 2, "J": 2 } "caracteres que sustituyen a escape
+let g:easyescape_timeout = 100 "tiempo de espera de los caracteres
 
 "configuracion de ultisnips
 
@@ -133,16 +132,118 @@ let g:rainbow_active = 1 "activa los parentesis de colores
 let g:indent_guides_guide_size = 1
 let g:indent_guides_enable_on_start = 1
 
+let g:ale_linters = {
+\ 'cs': ['OmniSharp']
+\}
+
 "ALE configuration"
 let g:ale_fixers = {
 \ '*': ['remove_trailing_lines', 'trim_whitespace'],
-\    'python': ['black']
+\    'python': ['black'],
+\    'javascript':['eslint'],
+\    'typescript': ['eslint']
 \}
+
+
+"lichess game config -- required for the game"
+let g:lichess_api_token = 'lip_bmFk6bjO28vv0rFaWYYr'
+
+
+" black pieces
+let g:lichess_piece_p =
+    \   [
+    \    "    ,,    ",
+    \    "    ,,,,  ",
+    \    "    ,,,,  ",
+    \    "    ,,,,  ",
+    \    "          "] " black pawn
+let g:lichess_piece_r =
+    \   [
+    \    "  , ,, ,  ",
+    \    "  ,,,,,,  ",
+    \    "  ,,,,,,  ",
+    \    " ,,,,,,,, ",
+    \    "          "] " black rook
+let g:lichess_piece_k =
+    \   [
+    \    "    ,,    ",
+    \    " ,,,,,,,, ",
+    \    "    ,,    ",
+    \    "    ,,    ",
+    \    "          "] " black king
+let g:lichess_piece_q =
+    \   [
+    \    "  , ,, ,  ",
+    \    "   ,,,,   ",
+    \    "    ,,    ",
+    \    "  ,,,,,,  ",
+    \    "          "] " black queen
+let g:lichess_piece_b =
+    \   [
+    \    "   ,,,,   ",
+    \    "   ,,,,   ",
+    \    "    ,,    ",
+    \    "  ,,,,,,  ",
+    \    "          "] " black bishop
+let g:lichess_piece_n =
+    \   [
+    \    "   ,,,    ",
+    \    " ,,, ,,   ",
+    \    "    ,,,   ",
+    \    "  ,,,,,,  ",
+    \    "          "] " black knight
+
+" white pieces
+let g:lichess_piece_P =
+    \   [
+    \    "    ;;    ",
+    \    "   ;;;;   ",
+    \    "   ;;;;   ",
+    \    "   ;;;;   ",
+    \    "          "] " white pawn
+let g:lichess_piece_R =
+    \   [
+    \    "  ; ;; ;  ",
+    \    "  ;;;;;;  ",
+    \    "  ;;;;;;  ",
+    \    " ;;;;;;;; ",
+    \    "          "] " white rook
+let g:lichess_piece_K =
+    \   [
+    \    "    ;;    ",
+    \    " ;;;;;;;; ",
+    \    "    ;;    ",
+    \    "    ;;    ",
+    \    "          "] " white king
+let g:lichess_piece_Q =
+    \   [
+    \    "  ; ;; ;  ",
+    \    "   ;;;;   ",
+    \    "    ;;    ",
+    \    "  ;;;;;;  ",
+    \    "          "] " white queen
+let g:lichess_piece_B =
+    \   [
+    \    "   ;;;;   ",
+    \    "   ;;;;   ",
+    \    "    ;;    ",
+    \    "  ;;;;;;  ",
+    \    "          "] " white bishop
+let g:lichess_piece_N =
+    \   [
+    \    "   ;;;    ",
+    \    " ;;; ;;   ",
+    \    "    ;;;   ",
+    \    "  ;;;;;;  ",
+    \    "          "] " white knight
 
 "keyboard maps
 
 "jj ahora es escape en modo insertar
 imap jj <esc>
+imap JJ <esc>
+" map tab as four spaces
+
 "al presionar escape dos veces en modo normal, quita el resaltado de las busquedas
 nnoremap <esc><esc> :nohlsearch<cr>
 "esto hace que espacio no haga nada en modo normal. necesario para que espacio
@@ -168,8 +269,12 @@ nmap <Leader>tw :term <CR>
 nmap <F2> :wq!<CR>
 "esto es para abrir ej archivo init.vim, donde se cambian las configuraciones
 "del editor
-nmap <leader>ev :e ~/.config/nvim/init.vim<cr>
-nmap <leader>s :so ~/.config/nvim/init.vim<cr>
+nmap <leader>ev :e ~\AppData\Local\nvim\init.vim<cr>
+nmap <leader>s :so ~\AppData\Local\nvim\init.vim<cr>
+
+"c# maps"
+nmap <leader># :call ExecuteCompiledCSharpCode()<cr>
+nmap <leader>## :call ExecuteFolderCompiledCSharpCode()<cr>
 
 " esto es para eliminar el búfer actual
 nmap <Leader>d :bd<CR>
@@ -200,19 +305,38 @@ nmap <leader>tc :Telescope git_commits<cr>
 nmap <leader>tp :Telescope projects<cr>
 nmap <leader>tm :Telescope marks<cr>
 
+"lichess nvim maps"
+nmap <leader>lf :LichessFindGame<cr>
+nmap <leader>lm :LichessMakeMoveUCI<cr>
+
+"tetris map"
+nmap <c-t> :Tetris<cr>
 
 "this maps are for write double of the characters and left the cursor in
 "middle"
+inoremap ' ''<esc>i
+inoremap " ""<esc>i
 imap [ []<left>
 imap { {}<left>
 imap ( ()<left>
-inoremap ' ''<Esc>i
-inoremap <c-'> '<Esc>a
-inoremap " ""<Esc>i
-
 
 "terminal maps"
 :tnoremap jj <C-\><C-n>
+:tnoremap JJ <C-\><C-n>
+
+
+" coc function remap
+:inoremap <silent><expr> <TAB> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<TAB>"
+
+"ALE remaps"
+noremap  gd :ALEGoToDefinition<cr>
+noremap <leader>x :ALENext<cr>
+noremap <leader>y :ALEPrevious<cr>
+
+
+
+
+
 
 " git functions made by me
 function Remote()
@@ -285,7 +409,32 @@ call inputrestore()
 :execute 'Git add '. add
 endfunction
 
+"this function will compile and execute the compiled c# code"
+function ExecuteCompiledCSharpCode()
+    let filename = expand("%:r")
+    let extension = expand("%:e")
+    if extension == "cs"
+        execute "!mcs %"
+        let exe_filename = filename.".exe"
+        execute "term .\\".exe_filename
+    else
+        echomsg extension
+        echoerr "The file is not a C# file"
+    endif
+endfunction
 
+function ExecuteFolderCompiledCSharpCode()
+    let filename = expand("%:r")
+    let extension = expand("%:e")
+    if extension == "cs"
+        execute "!mcs *.cs"
+        let exe_filename = filename.".exe"
+        execute "term .\\".exe_filename
+    else
+        echomsg extension
+        echoerr "The file is not a C# file"
+    endif
+endfunction
 
 "commands that executes automaticly when an event occurs"
 
@@ -687,12 +836,9 @@ lua <<EOF
       ['<C-e>'] = cmp.mapping.abort(),
       ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     }),
-    sources = cmp.config.sources({
-      { name = 'nvim_lsp' },
-      { name = 'ultisnips' }, -- For ultisnips users.
-    }, {
+     {
       { name = 'buffer' },
-    })
+    }
   })
 
   -- Set configuration for specific filetype.
@@ -724,124 +870,20 @@ lua <<EOF
 
 
 
-    -- this is required for the functioning of lsp-installer
-    require("nvim-lsp-installer").setup {}
-
-
-  local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-    -- Servidores que están funcionando
-    -- LpsConfig no los instala correctamente, deben ser instalados manualmente
-    -- con NPM i -g <server-name>
-  require('lspconfig')['html'].setup {
-    capabilities = capabilities
-  }
-  require('lspconfig')['vimls'].setup {
-    capabilities = capabilities
-  }
-require('lspconfig')['cssls'].setup {
-    capabilities = capabilities
-}
-require( 'lspconfig' )['clangd'].setup{
-    capabilities = capabilities
-}
-require('lspconfig')['tsserver'].setup {
-capabilities = capabilities
-}
-require('lspconfig')['pyright'].setup {
-capabilities = capabilities
-}
-
 EOF
 
-"COnfiguración para LSP
-lua << EOF
--- Mappings.
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '<space>ex', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<space>p', vim.diagnostic.setloclist, opts)
-
-
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
-  -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-  -- Mappings.
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-  vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, bufopts)
-  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
-end
-local lsp_flags = {
-  -- This is the default in Nvim -1.7+
-  debounce_text_changes = 150,
-}
-  -- Servidores que están funcionando
-  -- LpsConfig no los instala correctamente, deben ser instalados manualmente
-  -- con NPM i -g <server-name>
-require('lspconfig')['pyright'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
-}
-require('lspconfig')['vimls'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
-}
-require('lspconfig')['tsserver'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
-}
-require('lspconfig')['html'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
-}
-require('lspconfig')['cssls'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
-}
-require( 'lspconfig' )['clangd'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
-}
-
-local lsp_defaults = {
-  flags = {
-    debounce_text_changes = 150,
-  },
-  capabilities = require('cmp_nvim_lsp').update_capabilities(
-    vim.lsp.protocol.make_client_capabilities()
-  ),
-  on_attach = function(client, bufnr)
-    vim.api.nvim_exec_autocmds('User', {pattern = 'LspAttached'})
-  end
-}
-EOF
 
 "here will be the project.nvim setup"
-lua <<EOF
-    require("project_nvim").setup {
-
-}
-EOF
-
 "project.nvim integration with telescope"
 lua <<EOF
+    require("project_nvim").setup {}
+    -- extensions for telescope - projects and media_files
     require('telescope').load_extension('projects')
+
 EOF
+
+"here will be the neoscroll setup and config"
+lua <<EOF
+require('neoscroll').setup()
+EOF
+
